@@ -1,0 +1,18 @@
+@FirstNetApi_HostAddress = https://localhost:7062
+
+GET {{FirstNetApi_HostAddress}}/api/restaurants
+{
+
+}
+###
+
+POST {{FirstNetApi_HostAddress}}/api/restaurants
+Content-Type: application/json
+
+{
+  "Name" : "Tasty Bites",
+  "Desciption": "A cosy restaurant serving a lot of people",
+  "Category": "Food"
+}
+
+###
