@@ -24,10 +24,13 @@ public static class ServiceCollectionExtensions
         .UseSqlServer(ConnectionString)
         .EnableSensitiveDataLogging());
 
+        //User stores & User Manager
+        services.AddIdentityApiEndpoints<User>()
+            .AddEntityFrameworkStores<RestaurantsDbContext>();
+
         services.AddScoped<IRestaurantSeeder, RestaurantSeeder>();
-
-
         //Dependency Injection to the repositories of the entities
         services.AddScoped<IRestaurantsRepository, RestaurantsRepositories>();
+        services.AddScoped<IDishesRepository, DishesRepositories>();
     }
 }

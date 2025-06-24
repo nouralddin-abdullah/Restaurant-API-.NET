@@ -14,24 +14,20 @@ namespace FirstNetApi.Controllers
 {
     [ApiController]
     [Route("api/restaurants")]
-    public class RestaurantsControllers(IMediator mediator) : ControllerBase
+    public class RestaurantsController(IMediator mediator) : ControllerBase
     {
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<ActionResult<IEnumerable<RestaurantDtos>>> GetAll()
         {
             var restaurants = await mediator.Send(new GetRestaurantsQuery());
             return Ok(restaurants);
         }
 
         [HttpGet("{restaurantId}")]
-        public async Task<IActionResult> GetRestaurant([FromRoute] int restaurantId)
+        public async Task<ActionResult<RestaurantDtos?>> GetRestaurant([FromRoute] int restaurantId)
         {
             var restaurant = await mediator.Send(new GetRestaurantByIdQuery(restaurantId));
-            if (restaurant == null)
-            {
-                return NotFound("No restaurants found with this id ");
-            }
             return Ok(restaurant);
         }
 
@@ -45,24 +41,16 @@ namespace FirstNetApi.Controllers
         [HttpDelete("{restaurantId}")]
         public async Task<IActionResult> DeleteRestaurant([FromRoute] int restaurantId)
         {
-            var isDeleted = await mediator.Send(new DeleteRestaurantCommand(restaurantId));
-            if (isDeleted)
-            {
-                return NoContent();
-            }
-            return NotFound();
+            await mediator.Send(new DeleteRestaurantCommand(restaurantId));
+            return NoContent();
         }
 
         [HttpPatch("{restaurantId}")]
         public async Task<IActionResult> UpdateRestaurant([FromRoute] int restaurantId, UpdateRestaurantCommand command)
         {
             command.restaurantId = restaurantId;
-            var isUpdated = await mediator.Send(command);
-            if (isUpdated)
-            {
-                return NoContent();
-            }
-            return NotFound();
+            await mediator.Send(command);
+            return NoContent();
         }
     }
 }
